@@ -1,0 +1,16 @@
+#title {
+    background-color: yellow;
+}
+
+.showAddNew, .showEdit{
+	display: none;
+}
+
+/* button new  */
+.addnew{
+	margin: 20px;
+}
+
+.addbtn{
+	margin: 10px;
+}
