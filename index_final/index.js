@@ -25,9 +25,9 @@ app.use(cors());
 
 
 
-// show 
+// index 
 app.get('/', (req, res) => {
-	res.send('go to /product')
+	res.send('go to /products')
 });
 
 // show all
@@ -59,11 +59,11 @@ app.get('/products/add', (req, res) => {
 	});
 });
 
-// add delete
+//  delete
 app.get('/products/delete', (req, res) => {
-	const { name } = req.query;
-	console.log(name);
-	const DELETE_PRODUCTS_QUERY = `DELETE FROM products WHERE name ='${name}'`;
+	const { ID } = req.query;
+	console.log(ID);
+	const DELETE_PRODUCTS_QUERY = `DELETE FROM products WHERE ID ='${ID}'`;
 	connection.query(DELETE_PRODUCTS_QUERY, (err, results) => {
 		if(err) {
 			return res.send(err)
@@ -74,6 +74,20 @@ app.get('/products/delete', (req, res) => {
 	});
 });
 
+// edit
+app.get('/products/edit', (req, res) => {
+	const { ID, name, price } = req.query;
+	console.log(ID, name, price);
+	const UPDATE_PRODUCTS_QUERY = `UPDATE products SET name='${name}', price='${price}' WHERE ID='${ID}'`;
+	connection.query(UPDATE_PRODUCTS_QUERY, (err, results) => {
+		if(err) {
+			return res.send(err)
+		}
+		else {
+			return res.send('successful')
+		}
+	});
+});
 
 
 
