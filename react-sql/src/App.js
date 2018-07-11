@@ -6,149 +6,149 @@ import './App.css';
 class App extends Component {
 
   state = {
-    products: [],
-    product: {
-      name: 'sample',
-      price: 20
+    companies: [],
+    company: {
+      nameMain: 'company',
+      nameChild: 'child company',
+      profit: 0,
+      childEarnings: 0,
+      id: 0
     }
   }
 
   componentDidMount() {
-    this.getProducts();
+    this.getCompanies();
   }
 
+  // show Companies
+  getCompanies = _ =>{
+    fetch('http://localhost:4000/companies')
+      .then(response => response.json())
+      .then(response => this.setState({ companies: response.data }))
+      .catch(err => console.error(err))
 
-addNewShow = _ => {
+  }
+
+  // delete Companies
+  deleteCompanies = item =>{
+  console.log('this is:', item);
+  const ID_DELETE = "http://localhost:4000/companies/delete?id=" + item;
+  console.log('this is id:', ID_DELETE);
+  fetch(ID_DELETE)
+      .then(this.getCompanies)
+      .catch(err => console.error(err))
+}
+
+  // add Companies
+  addCompanies = _ => {
+    const { company } = this.state;
+    const ADD_NEW_COMP = `http://localhost:4000/companies/add?namemain=${company.nameMain}&namechild=${company.nameChild}&profit=${company.profit}&childearnings=${company.childEarnings}`;
+    console.log('this is ADD_NEW_COMP:', ADD_NEW_COMP);  
+    fetch(ADD_NEW_COMP)
+      .then(this.getCompanies)
+      .catch(err => console.error(err))
+
+        const el =findDOMNode(this.refs.showAddNew);
+        $(el).slideToggle();
+  }
+
+  //button add new company
+    addNewShow = _ => {
   const el =findDOMNode(this.refs.showAddNew);
   $(el).slideToggle();
 }
 
+  //button edit company
 showEdit = _ => {
   const el =findDOMNode(this.refs.showEdit);
   $(el).slideToggle();
 }
 
-
-
-  // show products
-  getProducts = _ =>{
-    fetch('http://localhost:4000/products')
-      .then(response => response.json())
-      .then(response => this.setState({ products: response.data }))
-      .catch(err => console.error(err))
-  }
-
-
-
-
-
-  // add products
-  addProduct = _ => {
-    const { product } = this.state;
-    fetch(`http://localhost:4000/products/add?name=${product.name}&price=${product.price}`)
-      .then(this.getProducts)
-      .catch(err => console.error(err))
-
-        const el =findDOMNode(this.refs.showAddNew);
-        $(el).slideToggle();
-
-
-  }
-
-
-  // delete products
-	deleteProd = item =>{
-	console.log('this is:', item);
-	var linka = "http://localhost:4000/products/delete?ID=" + item;
-	console.log('this is kolya:', linka);
-	fetch(linka)
-      .then(this.getProducts)
+  // edit Companies
+  editCompanies = item =>{
+  const { company } = this.state;
+  console.log('this is:', item);
+  const EDIT = `http://localhost:4000/companies/edit?namemain=${company.nameMain}&namechild=${company.nameChild}&profit=${company.profit}&childearnings=${company.childEarnings}&id=` + item;
+  console.log('this is EDIT:', EDIT);
+  fetch(EDIT)
+      .then(this.getCompanies)
       .catch(err => console.error(err))
 }
 
-  // edit products
-	editProd = item =>{
-	const { product } = this.state;
-	console.log('this is:', item);
-	var linka = `http://localhost:4000/products/edit?name=${product.name}&price=${product.price}&ID=` + item;
-	console.log('this is kolya:', linka);
-	fetch(linka)
-      .then(this.getProducts)
-      .catch(err => console.error(err))
-}
+
 
 
 
   render() {
 
+        const { company } = this.state;
 
+        const listItem = this.state.companies.map((item)=>{
+        return (<div key={item.id} className="showDetail border border-info rounded">
+              <span>Company: {item.NameMain}</span>
+              <br/>
+              <span>Profit: ${item.Profit} </span> 
+              <br/>
+              <span>Children: {item.NameChild} </span>
+              <br/>
+              <span>ChildEarnings: ${item.ChildEarnings} </span>
+              <br/>
 
-{/*    new version  */}
-    const { product } = this.state;
+              <div className="buuutton">  
+                <button type="button" className="btn btn-info buuutton" onClick={this.showEdit}>Edit</button>
+                <button type="button" className="btn btn-danger buuutton" onClick={this.deleteCompanies.bind(this, item.id)}>Delete</button>
+              </div>
 
-    const listItem = this.state.products.map((item)=>{
-        return <div key={item.ID}>
-        			<span>{item.name} </span>
-					<span>{item.price} </span>
-         			<button type="button" onClick={this.deleteProd.bind(this, item.ID)}>Delete</button>
-        			<button type="button" onClick={this.editProd.bind(this, item.ID)}>Edit</button>
-        				<div className={item.ID}>   tut knopka </div>
-		        </div>
-    })
+              <div ref='showEdit' className="show Edit form-group"> <h3> Enter data </h3>
+                <input className="form-control" placeholder="new company name"
+                   onChange={e => this.setState({ company: { ...company, nameMain: e.target.value}})}/>
+                <input className="form-control" placeholder="new name Child" 
+                  onChange={e => this.setState({ company: { ...company, nameChild: e.target.value}})}/>
+                <input className="form-control" placeholder="new  profit"
+                  onChange={e => this.setState({ company: { ...company, profit: e.target.value}})}/>
+                <input className="form-control" placeholder="new child Earnings" 
+                  onChange={e => this.setState({ company: { ...company, childEarnings: e.target.value}})}/>
 
+                 <div className="buuutton">     
+                  <button className="btn btn-success" type="button" onClick={this.editCompanies.bind(this, item.id)}>Save</button>
+                </div>
+
+              </div>
+              </div>)
+                })
 
 
     return (
       <div className="App">
           
+             {/* header */} 
         <div className="container"> 
           <div id="title"> <h1> Hello, list of companies </h1> </div>
-
-
-
+            
+            {/* new company button */} 
             <button className="addnew btn btn-primary" onClick={this.addNewShow}> New company </button>
-              
-
+	        
+            {/* div company button */}
               <div ref='showAddNew' className="showAddNew form-group"> 
-                <input className="form-control" placeholder="name"
-                   onChange={e => this.setState({ product: { ...product, name: e.target.value}})}/>
-                <input className="form-control" placeholder="price" 
-                  onChange={e => this.setState({ product: { ...product, price: e.target.value}})}/>
-                <button className="addbtn btn btn-success" onClick={this.addProduct}> Add product </button>
-              </div>
+                <input className="form-control" placeholder="company name"
+                   onChange={e => this.setState({ company: { ...company, nameMain: e.target.value}})}/>
+                <input className="form-control" placeholder="child name" 
+                  onChange={e => this.setState({ company: { ...company, nameChild: e.target.value}})}/>
+                <input className="form-control" placeholder="profit" 
+                  onChange={e => this.setState({ company: { ...company, profit: e.target.value}})}/>
+                <input className="form-control" placeholder="earnings" 
+                  onChange={e => this.setState({ company: { ...company, childEarnings: e.target.value}})}/>
+                <button className="addbtn btn btn-success" onClick={this.addCompanies}> Add company </button>
+              </div> 
 
-              
-              <div ref='showEdit' className="showEdit form-group"> Enter data 
-                <input className="form-control" placeholder="new name"
-                   onChange={e => this.setState({ product: { ...product, name: e.target.value}})}/>
-                <input className="form-control" placeholder="new price" 
-                  onChange={e => this.setState({ product: { ...product, price: e.target.value}})}/>
-
-                <button type="button" onClick={this.editProd}>Edit</button>
-              </div>
+	<br/>   
+    {/* show companies */}
+    {listItem}
 
 
 
 
 
-
-
-
-
-
-	
-	{/*           new_version  */}
-	{listItem}	
-
-	<br/>
-
-	
-
-      <button onClick={this.showEdit}> Edit </button>
-
-
-
-      
 
 
 

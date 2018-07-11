@@ -1,0 +1,8 @@
+CREATE TABLE MainCompany (
+    id int NOT NULL AUTO_INCREMENT,
+    NameMain varchar(255),
+    NameChild varchar(255),
+    Profit int,
+    ChildEarnings int,
+    PRIMARY KEY (id)
+);
