@@ -6,6 +6,7 @@ import './App.css';
 class App extends Component {
 
   state = {
+    canedit: false,
     companies: [],
     company: {
       nameMain: 'company',
@@ -62,6 +63,7 @@ class App extends Component {
 showEdit = _ => {
   const el =findDOMNode(this.refs.showEdit);
   $(el).slideToggle();
+  this.setState({ canedit: true});
 }
 
   // edit Companies
@@ -83,6 +85,8 @@ showEdit = _ => {
 
         const { company } = this.state;
 
+        const canedittru = this.state.canedit;
+
         const listItem = this.state.companies.map((item)=>{
         return (<div key={item.id} className="showDetail border border-info rounded">
               <span>Company: {item.NameMain}</span>
@@ -98,7 +102,9 @@ showEdit = _ => {
                 <button type="button" className="btn btn-info buuutton" onClick={this.showEdit}>Edit</button>
                 <button type="button" className="btn btn-danger buuutton" onClick={this.deleteCompanies.bind(this, item.id)}>Delete</button>
               </div>
+              
 
+              {canedittru ? (
               <div ref='showEdit' className="show Edit form-group"> <h3> Enter data </h3>
                 <input className="form-control" placeholder="new company name"
                    onChange={e => this.setState({ company: { ...company, nameMain: e.target.value}})}/>
@@ -112,8 +118,11 @@ showEdit = _ => {
                  <div className="buuutton">     
                   <button className="btn btn-success" type="button" onClick={this.editCompanies.bind(this, item.id)}>Save</button>
                 </div>
+              
 
-              </div>
+              </div> ) : (<div> lalalala </div>)}
+              
+
               </div>)
                 })
 
