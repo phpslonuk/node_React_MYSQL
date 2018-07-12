@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
-import {findDOMNode} from 'react-dom';
+
 import './App.css';
 
 class App extends Component {
 
   state = {
-    canedit: false,
+    canadd: false,
     companies: [],
     company: {
       nameMain: 'company',
@@ -45,25 +44,22 @@ class App extends Component {
     const { company } = this.state;
     const ADD_NEW_COMP = `http://localhost:4000/companies/add?namemain=${company.nameMain}&namechild=${company.nameChild}&profit=${company.profit}&childearnings=${company.childEarnings}`;
     console.log('this is ADD_NEW_COMP:', ADD_NEW_COMP);  
+    this.setState({ canadd: false});
     fetch(ADD_NEW_COMP)
       .then(this.getCompanies)
       .catch(err => console.error(err))
 
-        const el =findDOMNode(this.refs.showAddNew);
-        $(el).slideToggle();
+ 
   }
 
   //button add new company
     addNewShow = _ => {
-  const el =findDOMNode(this.refs.showAddNew);
-  $(el).slideToggle();
+  this.setState({ canadd: true});
 }
 
   //button edit company
 showEdit = _ => {
-  const el =findDOMNode(this.refs.showEdit);
-  $(el).slideToggle();
-  this.setState({ canedit: true});
+
 }
 
   // edit Companies
@@ -72,7 +68,7 @@ showEdit = _ => {
   console.log('this is:', item);
   const EDIT = `http://localhost:4000/companies/edit?namemain=${company.nameMain}&namechild=${company.nameChild}&profit=${company.profit}&childearnings=${company.childEarnings}&id=` + item;
   console.log('this is EDIT:', EDIT);
-  fetch(EDIT)
+    fetch(EDIT)
       .then(this.getCompanies)
       .catch(err => console.error(err))
 }
@@ -85,7 +81,7 @@ showEdit = _ => {
 
         const { company } = this.state;
 
-        const canedittru = this.state.canedit;
+        const canadd = this.state.canadd;
 
         const listItem = this.state.companies.map((item)=>{
         return (<div key={item.id} className="showDetail border border-info rounded">
@@ -104,7 +100,7 @@ showEdit = _ => {
               </div>
               
 
-              {canedittru ? (
+              
               <div ref='showEdit' className="show Edit form-group"> <h3> Enter data </h3>
                 <input className="form-control" placeholder="new company name"
                    onChange={e => this.setState({ company: { ...company, nameMain: e.target.value}})}/>
@@ -120,7 +116,7 @@ showEdit = _ => {
                 </div>
               
 
-              </div> ) : (<div> lalalala </div>)}
+                </div>
               
 
               </div>)
@@ -137,8 +133,10 @@ showEdit = _ => {
             {/* new company button */} 
             <button className="addnew btn btn-primary" onClick={this.addNewShow}> New company </button>
 	        
-            {/* div company button */}
-              <div ref='showAddNew' className="showAddNew form-group"> 
+          {canadd ? (
+            
+              <div  className="show AddNew form-group"> 
+              
                 <input className="form-control" placeholder="company name"
                    onChange={e => this.setState({ company: { ...company, nameMain: e.target.value}})}/>
                 <input className="form-control" placeholder="child name" 
@@ -149,6 +147,7 @@ showEdit = _ => {
                   onChange={e => this.setState({ company: { ...company, childEarnings: e.target.value}})}/>
                 <button className="addbtn btn btn-success" onClick={this.addCompanies}> Add company </button>
               </div> 
+              ) : (<div>  </div>)}
 
 	<br/>   
     {/* show companies */}
