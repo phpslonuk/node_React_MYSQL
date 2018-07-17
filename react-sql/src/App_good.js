@@ -6,7 +6,6 @@ class App extends Component {
 
   state = {
     canadd: false,
-    canedit: false,
     companies: [],
     company: {
       nameMain: 'company',
@@ -59,12 +58,7 @@ class App extends Component {
 }
 
   //button edit company
-showEdit = e => {
-  e.preventDefault();
-  console.log(e);
-  this.setState({
-    canedit: !this.state.canedit
-  })
+showEdit = _ => {
 
 }
 
@@ -89,8 +83,6 @@ showEdit = e => {
 
         const canadd = this.state.canadd;
 
-        const { canedit } = this.state;
-
         const listItem = this.state.companies.map((item)=>{
         return (<div key={item.id} className="showDetail border border-info rounded">
               <span>Company: {item.NameMain}</span>
@@ -103,16 +95,13 @@ showEdit = e => {
               <br/>
 
               <div className="buuutton">  
-                <button type="button" className="btn btn-info buuutton"
-                onClick={e => this.showEdit(e)}>Edit</button>
+                <button type="button" className="btn btn-info buuutton" onClick={this.showEdit}>Edit</button>
                 <button type="button" className="btn btn-danger buuutton" onClick={this.deleteCompanies.bind(this, item.id)}>Delete</button>
               </div>
               
 
               
-              <div className={`panel ${canedit ? 'is-expanded' : '' }`} onClick={e => this.showEdit(e)}> 
-              <div> <h3> Enter data </h3> </div>
-                <div className="panel-body">
+              <div ref='showEdit' className="show Edit form-group"> <h3> Enter data </h3>
                 <input className="form-control" placeholder="new company name"
                    onChange={e => this.setState({ company: { ...company, nameMain: e.target.value}})}/>
                 <input className="form-control" placeholder="new name Child" 
@@ -124,7 +113,6 @@ showEdit = e => {
 
                  <div className="buuutton">     
                   <button className="btn btn-success" type="button" onClick={this.editCompanies.bind(this, item.id)}>Save</button>
-                </div>
                 </div>
               
 
@@ -144,10 +132,10 @@ showEdit = e => {
             
             {/* new company button */} 
             <button className="addnew btn btn-primary" onClick={this.addNewShow}> New company </button>
-          
+	        
           {canadd ? (
             
-              <div  className="form-group"> 
+              <div  className="show AddNew form-group"> 
               
                 <input className="form-control" placeholder="company name"
                    onChange={e => this.setState({ company: { ...company, nameMain: e.target.value}})}/>
@@ -161,7 +149,7 @@ showEdit = e => {
               </div> 
               ) : (<div>  </div>)}
 
-  <br/>   
+	<br/>   
     {/* show companies */}
     {listItem}
 
@@ -172,7 +160,7 @@ showEdit = e => {
 
 
 
-      </div>
+			</div>
       </div>
     );
   }

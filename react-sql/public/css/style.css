@@ -2,9 +2,18 @@
     background-color: yellow;
 }
 
-.showAddNew, .showEdit{
+.panel .panel-body {
 	display: none;
 }
+
+.is-expanded .panel-body{
+	display: block;
+}
+
+
+
+
+
 
 /* button new  */
 .addnew{
